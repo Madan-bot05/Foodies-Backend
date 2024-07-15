@@ -4,9 +4,10 @@ import com.example.foodeis.dto.RestaurantDto;
 import com.example.foodeis.model.Restaurant;
 import com.example.foodeis.model.User;
 import com.example.foodeis.request.CreateResturantRequest;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class ResturantServiceImplementation implements ResturantService{
     @Override
     public Restaurant createResturant(CreateResturantRequest req, User user) {
