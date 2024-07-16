@@ -6,6 +6,7 @@ import com.example.foodeis.model.Restaurant;
 import com.example.foodeis.model.User;
 import com.example.foodeis.repository.AddressRepository;
 import com.example.foodeis.repository.ResturantRepository;
+import com.example.foodeis.repository.UserRepository;
 import com.example.foodeis.request.CreateResturantRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ public class ResturantServiceImplementation implements ResturantService{
     private AddressRepository addressRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public Restaurant createResturant(CreateResturantRequest req, User user) {
@@ -96,11 +99,35 @@ public class ResturantServiceImplementation implements ResturantService{
 
     @Override
     public Restaurant getResturantByUserId(Long userId) throws Exception {
-        return null;
+        Restaurant restaurant=resturantRepository.findAllByOwnerId(userId);
+        if (restaurant==null){
+            throw new Exception("Restaurant Not Found");
+        }
+        return restaurant;
     }
 
     @Override
     public RestaurantDto addtoFavourites(Long resturantId, User user) throws Exception {
-        return null;
+        Restaurant restaurant=findResturantById(resturantId);
+        RestaurantDto dto=new RestaurantDto();
+        dto.setDescription(restaurant.getDescription());
+        dto.setImages(restaurant.getImages());
+        dto.setTitle(restaurant.getName());
+        dto.setId(resturantId);
+
+        if(user.getFavourites().contains(dto)){
+            user.getFavourites().remove(dto);
+        }else
+            user.getFavourites().add(dto);
+
+        userRepository.save(user);
+        return dto;
+    }
+
+    @Override
+    public Restaurant updateResturantStatus(Long resturantId) throws Exception {
+        Restaurant restaurant=findResturantById(resturantId);
+        restaurant.setOpen(restaurant.isOpen());
+        return resturantRepository.save(restaurant);
     }
 }
