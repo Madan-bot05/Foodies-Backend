@@ -36,7 +36,7 @@ public class AdminRestaurantController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Restaurant> deleteRestaurant(@RequestBody CreateResturantRequest req, @RequestHeader ("Authorization") String jwt,@PathVariable Long id) throws Exception {
+    public ResponseEntity<Restaurant> deleteRestaurant(@RequestHeader ("Authorization") String jwt,@PathVariable Long id) throws Exception {
         User user=userService.findUserByJwtToken(jwt);
         resturantService.deleteResturant(id);
 
@@ -55,7 +55,7 @@ public class AdminRestaurantController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<Restaurant> findRestaurantByUserId(@RequestBody CreateResturantRequest req, @RequestHeader ("Authorization") String jwt) throws Exception {
+    public ResponseEntity<Restaurant> findRestaurantByUserId( @RequestHeader ("Authorization") String jwt) throws Exception {
         User user=userService.findUserByJwtToken(jwt);
         Restaurant restaurant=resturantService.getResturantByUserId(user.getId());
 

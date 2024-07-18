@@ -1,5 +1,6 @@
 package com.example.foodeis.controller;
 
+import com.example.foodeis.dto.RestaurantDto;
 import com.example.foodeis.model.Restaurant;
 import com.example.foodeis.model.User;
 import com.example.foodeis.request.CreateResturantRequest;
@@ -25,14 +26,30 @@ public class RestaurantController {
         User user=userService.findUserByJwtToken(jwt);
         List<Restaurant> restaurant=resturantService.searchResturants(keyword);
 
-        return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
+        return new ResponseEntity<>(restaurant, HttpStatus.OK);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<Restaurant>> getAllRestaurant(@RequestHeader("Authorization") String jwt, @RequestParam String keyword) throws Exception {
+    @GetMapping()
+    public ResponseEntity<List<Restaurant>> getAllRestaurant(@RequestHeader("Authorization") String jwt) throws Exception {
         User user=userService.findUserByJwtToken(jwt);
-        List<Restaurant> restaurant=resturantService.searchResturants(keyword);
+        List<Restaurant> restaurant=resturantService.getAllResturants();
 
-        return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
+        return new ResponseEntity<>(restaurant, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity <Restaurant> findRestaurantById(@RequestHeader("Authorization") String jwt,@PathVariable Long id) throws Exception {
+        User user=userService.findUserByJwtToken(jwt);
+        Restaurant restaurant=resturantService.findResturantById(id);
+
+        return new ResponseEntity<>(restaurant, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/add-favourites")
+    public ResponseEntity<RestaurantDto> addToFavourites(@RequestHeader("Authorization") String jwt,@PathVariable Long id) throws Exception {
+        User user=userService.findUserByJwtToken(jwt);
+        RestaurantDto restaurant=resturantService.addtoFavourites(id, user);
+
+        return new ResponseEntity<>(restaurant, HttpStatus.OK);
     }
 }
