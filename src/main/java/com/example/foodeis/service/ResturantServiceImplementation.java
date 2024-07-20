@@ -115,10 +115,20 @@ public class ResturantServiceImplementation implements ResturantService{
         dto.setTitle(restaurant.getName());
         dto.setId(resturantId);
 
-        if(user.getFavourites().contains(dto)){
-            user.getFavourites().remove(dto);
-        }else
-            user.getFavourites().add(dto);
+        boolean isFavourites=false;
+        List<RestaurantDto> favourites=user.getFavourites();
+        for(RestaurantDto favourite:favourites){
+            if (favourite.getId()==resturantId){
+                isFavourites=true;
+                break;
+            }
+        }
+
+        if(isFavourites){
+            favourites.removeIf(favourite -> favourite.getId()==resturantId);
+        }else {
+            favourites.add(dto);
+        }
 
         userRepository.save(user);
         return dto;
@@ -127,7 +137,11 @@ public class ResturantServiceImplementation implements ResturantService{
     @Override
     public Restaurant updateResturantStatus(Long resturantId) throws Exception {
         Restaurant restaurant=findResturantById(resturantId);
-        restaurant.setOpen(restaurant.isOpen());
+//        restaurant.setOpen(restaurant.isOpen());
+        if(restaurant.isOpen()==true ){
+            restaurant.setOpen(false);
+        }else
+            restaurant.setOpen(true);
         return resturantRepository.save(restaurant);
     }
 }

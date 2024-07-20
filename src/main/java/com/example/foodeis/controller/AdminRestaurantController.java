@@ -47,7 +47,7 @@ public class AdminRestaurantController {
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<Restaurant> updateRestaurantStatus(@RequestBody CreateResturantRequest req, @RequestHeader ("Authorization") String jwt,@PathVariable Long id) throws Exception {
+    public ResponseEntity<Restaurant> updateRestaurantStatus( @RequestHeader ("Authorization") String jwt,@PathVariable Long id) throws Exception {
         User user=userService.findUserByJwtToken(jwt);
         Restaurant restaurant=resturantService.updateResturantStatus(id);
 
@@ -62,7 +62,7 @@ public class AdminRestaurantController {
         MessageResponse res=new MessageResponse();
         res.setMessage("Restaurant deleted successfully");
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(restaurant,HttpStatus.OK);
     }
 }
 
