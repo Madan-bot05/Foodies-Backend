@@ -45,7 +45,7 @@ public class FoodServiceImplementation  implements FoodService{
 
     @Override
     public List<Food> getAllFood(Long restaurantId, boolean isVegetarian, boolean isNonVegetarian, boolean isSeasonal, String foodCategory) throws Exception {
-        List<Food> foods=foodRespository.finByRestaurantId(restaurantId);
+        List<Food> foods=foodRespository.findByRestaurantId(restaurantId);
 
         if(isVegetarian){ foods=filterByVegeterian(foods,isVegetarian);}
         if(isNonVegetarian){ foods=filterByNonVeg(foods,isNonVegetarian);}

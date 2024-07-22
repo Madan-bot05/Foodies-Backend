@@ -4,19 +4,20 @@ import com.example.foodeis.model.Category;
 import com.example.foodeis.model.Food;
 import com.example.foodeis.model.Restaurant;
 import com.example.foodeis.request.CreateFoodRequest;
+//import com.example.foodeis.exception.FoodNotFoundException;
 
 import java.util.List;
 
 public interface FoodService {
-    public Food createFood(CreateFoodRequest req, Category category, Restaurant restaurant) throws Exception;
+    Food createFood(CreateFoodRequest req, Category category, Restaurant restaurant) throws Exception;
 
     void deleteFood(Long foodId) throws Exception;
 
-    public List<Food> getAllFood(Long restaurantId,boolean isVegetarian,boolean isNonVegetarian,boolean isSeasonal,String foodCategory) throws Exception;
+    List<Food> getAllFood(Long restaurantId, boolean isVegetarian, boolean isNonVegetarian, boolean isSeasonal, String foodCategory) throws Exception;
 
-    public List<Food> searchFood(String keyword) throws Exception;
+    List<Food> searchFood(String keyword) throws Exception;
 
-    public Food findFoodById(Long id) throws Exception;
+    Food findFoodById(Long id) throws Exception;
 
-    public Food updateAvailabilityStatus(Long id) throws Exception;
+    Food updateAvailabilityStatus(Long id) throws Exception;
 }

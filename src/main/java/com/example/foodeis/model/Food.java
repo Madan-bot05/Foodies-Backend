@@ -23,22 +23,31 @@ public class Food {
     private Long price;
 
     @ManyToOne
+    @JoinColumn(name = "category_id") // Explicitly define the join column
     private Category foodCategory;
 
-    @Column(length = 1000)
     @ElementCollection
-    private List<String> images;
+    @CollectionTable(name = "food_images", joinColumns = @JoinColumn(name = "food_id")) // Define a separate table for images
+    @Column(name = "image_url", length = 1000)
+    private List<String> images = new ArrayList<>();
 
     private boolean available;
 
     @ManyToOne
+    @JoinColumn(name = "restaurant_id") // Explicitly define the join column
     private Restaurant restaurant;
 
     private boolean isVegetarian;
     private boolean isSeasonal;
 
     @ManyToMany
-    private List<IngredientsItem> ingredientsItems=new ArrayList<>();
+    @JoinTable(
+            name = "food_ingredients",
+            joinColumns = @JoinColumn(name = "food_id"),
+            inverseJoinColumns = @JoinColumn(name = "ingredient_id")
+    )
+    private List<IngredientsItem> ingredientsItems = new ArrayList<>();
 
+    @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
 }

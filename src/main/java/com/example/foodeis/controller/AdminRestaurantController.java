@@ -4,6 +4,7 @@ import com.example.foodeis.model.Restaurant;
 import com.example.foodeis.model.User;
 import com.example.foodeis.request.CreateResturantRequest;
 import com.example.foodeis.response.MessageResponse;
+import com.example.foodeis.service.FoodService;
 import com.example.foodeis.service.ResturantService;
 import com.example.foodeis.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ public class AdminRestaurantController {
     private ResturantService resturantService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private FoodService foodService;
 
     @PostMapping()
     public ResponseEntity<Restaurant> createRestaurant(@RequestBody CreateResturantRequest req, @RequestHeader ("Authorization") String jwt) throws Exception {
