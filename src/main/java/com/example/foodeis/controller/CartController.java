@@ -35,6 +35,18 @@ public class CartController {
         return new ResponseEntity<>(cart, HttpStatus.CREATED);
     }
 
+    @DeleteMapping ("/car/clear")
+    public ResponseEntity<Cart> clearCartItem( @RequestHeader("Authorization")String jwt, @PathVariable Long id) throws Exception {
+        Cart cart=cartService.clearCart(jwt);
+        return new ResponseEntity<>(cart, HttpStatus.CREATED);
+    }
+
+    @GetMapping ("/cart")
+    public ResponseEntity<Cart> findUserCart( @RequestHeader("Authorization")String jwt, @PathVariable Long id) throws Exception {
+        Cart cart=cartService.findCartByUserId(jwt);
+        return new ResponseEntity<>(cart, HttpStatus.CREATED);
+    }
+
 
 
 }
