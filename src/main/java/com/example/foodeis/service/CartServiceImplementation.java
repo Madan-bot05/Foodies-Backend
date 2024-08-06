@@ -12,6 +12,7 @@ import com.example.foodeis.request.AddCartItemRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -28,24 +29,44 @@ public class CartServiceImplementation implements CartService{
 
     @Override
     public CartItem addItemToCart(AddCartItemRequest req, String jwt) throws Exception {
-        User user =userService.findUserByJwtToken(jwt);
-        Food food=foodService.findFoodById(req.getFoodId());
-        Cart cart=cartRepository.findByCustomerId(user.getId());
+        // Find user by JWT token
+        User user = userService.findUserByJwtToken(jwt);
 
-        for (CartItem cartItem: cart.getItem()){
-            if(cartItem.getFood().equals(food)){
-                int quantity=cartItem.getQuantity()+req.getQuantity();
-                return updateCartItem(cartItem.getId(),quantity);
+        // Find food item by its ID
+        Food food = foodService.findFoodById(req.getFoodId());
+
+        // Find the cart by customer ID
+        Cart cart = cartRepository.findByCustomerId(user.getId());
+
+        // If the cart is null, create a new cart
+        if (cart == null) {
+            cart = new Cart();
+            cart.setId(user.getId());
+            cart.setItem(new ArrayList<>()); // Initialize the items list
+            cart = cartRepository.save(cart); // Save the new cart
+        }
+
+        // Iterate over the cart items to check if the food item is already in the cart
+        for (CartItem cartItem : cart.getItem()) {
+            if (cartItem.getFood().equals(food)) {
+                // Update the quantity if the food item is already in the cart
+                int quantity = cartItem.getQuantity() + req.getQuantity();
+                return updateCartItem(cartItem.getId(), quantity);
             }
         }
-        CartItem cartItem=new CartItem();
+
+        // If the food item is not already in the cart, create a new CartItem
+        CartItem cartItem = new CartItem();
         cartItem.setFood(food);
         cartItem.setQuantity(req.getQuantity());
         cartItem.setCart(cart);
         cartItem.setIngredients(req.getIngredients());
-        cartItem.setTotalPrice(req.getQuantity()+food.getPrice());
+        cartItem.setTotalPrice(req.getQuantity() * food.getPrice());
 
-        CartItem newCartItem=cartItemRepository.save(cartItem);
+        // Save the new cart item to the repository
+        CartItem newCartItem = cartItemRepository.save(cartItem);
+
+        // Add the new cart item to the cart
         cart.getItem().add(newCartItem);
 
         return newCartItem;
