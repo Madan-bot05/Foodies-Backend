@@ -42,12 +42,12 @@ public class CartServiceImplementation implements CartService{
         if (cart == null) {
             cart = new Cart();
             cart.setId(user.getId());
-            cart.setItem(new ArrayList<>()); // Initialize the items list
+            cart.setItems(new ArrayList<>()); // Initialize the items list
             cart = cartRepository.save(cart); // Save the new cart
         }
 
         // Iterate over the cart items to check if the food item is already in the cart
-        for (CartItem cartItem : cart.getItem()) {
+        for (CartItem cartItem : cart.getItems()) {
             if (cartItem.getFood().equals(food)) {
                 // Update the quantity if the food item is already in the cart
                 int quantity = cartItem.getQuantity() + req.getQuantity();
@@ -67,7 +67,7 @@ public class CartServiceImplementation implements CartService{
         CartItem newCartItem = cartItemRepository.save(cartItem);
 
         // Add the new cart item to the cart
-        cart.getItem().add(newCartItem);
+        cart.getItems().add(newCartItem);
 
         return newCartItem;
     }
@@ -81,7 +81,7 @@ public class CartServiceImplementation implements CartService{
             throw new Exception("CartItem not found");
         }
         CartItem item=cartItem.get();
-        cart.getItem().remove(item);
+        cart.getItems().remove(item);
 
         return cartRepository.save(cart);
     }
@@ -101,7 +101,7 @@ public class CartServiceImplementation implements CartService{
     @Override
     public Long calculateCartTotal(Cart cart) throws Exception {
         Long total=0L;
-        for (CartItem cartItem: cart.getItem()){
+        for (CartItem cartItem: cart.getItems()){
             total+=cartItem.getFood().getPrice()*cartItem.getQuantity();
         }
         return total;
@@ -127,7 +127,7 @@ public class CartServiceImplementation implements CartService{
     public Cart clearCart(String jwt) throws Exception {
         User user=userService.findUserByJwtToken(jwt);
         Cart cart=findCartByUserId(jwt);
-        cart.getItem().clear();
+        cart.getItems().clear();
         return cartRepository.save(cart);
     }
 }

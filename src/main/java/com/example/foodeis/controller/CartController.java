@@ -43,9 +43,16 @@ public class CartController {
     }
 
     @GetMapping("/cart")
-    public ResponseEntity<Cart> findUserCart(@RequestHeader("Authorization") String jwt) throws Exception {
-        Cart cart = cartService.findCartByUserId(jwt);
-        return new ResponseEntity<>(cart, HttpStatus.OK);
-    }
+    public ResponseEntity<Cart> findUserCart(@RequestHeader("Authorization") String authHeader) {
+        try {
+            // Extract JWT token from Authorization header
+            String jwt = authHeader.startsWith("Bearer ") ? authHeader.substring(7) : authHeader;
 
+            Cart cart = cartService.findCartByUserId(jwt);
+            return new ResponseEntity<>(cart, HttpStatus.OK);
+        } catch (Exception e) {
+            // Return a 404 status if cart or user is not found
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
